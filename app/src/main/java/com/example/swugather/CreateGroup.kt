@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.slider.RangeSlider
@@ -25,6 +26,7 @@ class CreateGroup : AppCompatActivity() {
     private lateinit var tvTimeRange: TextView
 
     private var selectedDayIndex: Int? = null // 선택된 요일
+    private val dayNames = listOf("월", "화", "수", "목", "금", "토", "일") // 요일 리스트
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,86 +51,63 @@ class CreateGroup : AppCompatActivity() {
             findViewById(R.id.tvSunday)
         )
 
-        // 카테고리 데이터 정의
-        val categories = listOf("운동", "독서", "여행", "스터디", "기타")
-
-        // Spinner 어댑터 설정
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategory.adapter = adapter
-
-        // RangeSlider 초기화
-        val rangeSlider: RangeSlider = findViewById(R.id.rangeSliderTime)
-        rangeSlider.setValues(9f, 18f) // 초기 값 설정 (9:00 ~ 18:00)
-
-        // 값이 변경될 때 동작 정의
-        rangeSlider.addOnChangeListener { slider, _, _ ->
-            val selectedValues = slider.values // 선택된 값 리스트
-            val startTime = selectedValues[0].toInt()
-            val endTime = selectedValues[1].toInt()
-
-            // 선택된 시간 표시 TextView 업데이트
-            tvTimeRange.text = "선택된 시간: $startTime:00 ~ $endTime:00"
-        }
-
-        // 요일 클릭 이벤트
-        setupDaySelector()
-
-        // 시간 선택
-        rangeSliderTime.addOnChangeListener { slider, _, _ ->
-            val values = slider.values
-            val startTime = "${values[0].toInt()}:00"
-            val endTime = "${values[1].toInt()}:00"
-            tvTimeRange.text = "선택된 시간: $startTime ~ $endTime"
-        }
+        setupDaySelector() // 요일 선택 설정
+        setupSpinner() // 카테고리 스피너 설정
+        setupRangeSlider() // 시간 선택 슬라이더 설정
 
         // 저장 버튼 클릭 이벤트
         findViewById<Button>(R.id.btnSave).setOnClickListener {
-            saveGroupToDatabase()
+            saveGroupToDatabase() // DB 저장
+            navigateToPostView()  // PostView로 이동
         }
-
     }
+
+    // 요일 선택 기능 설정
     private fun setupDaySelector() {
         dayTextViews.forEachIndexed { index, textView ->
             textView.setOnClickListener {
-                // 이전 선택 초기화
+                // 이전 선택된 요일 초기화
                 selectedDayIndex?.let { prevIndex ->
                     dayTextViews[prevIndex].setBackgroundResource(R.drawable.bg_day_default)
                 }
 
-                // 현재 선택 표시
+                // 현재 선택한 요일 표시
                 selectedDayIndex = index
                 textView.setBackgroundResource(R.drawable.bg_day_selected)
             }
         }
     }
 
+    // 카테고리 스피너 설정
+    private fun setupSpinner() {
+        val categories = listOf("운동", "독서", "여행", "스터디", "기타")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategory.adapter = adapter
+    }
+
+    // 시간 선택 슬라이더 설정
+    private fun setupRangeSlider() {
+        rangeSliderTime.setValues(9f, 18f) // 기본값 설정 (9:00 ~ 18:00)
+
+        rangeSliderTime.addOnChangeListener { slider, _, _ ->
+            val startTime = "${slider.values[0].toInt()}:00"
+            val endTime = "${slider.values[1].toInt()}:00"
+            tvTimeRange.text = "선택된 시간: $startTime ~ $endTime"
+        }
+    }
+
+    // 데이터베이스에 그룹 정보 저장
     private fun saveGroupToDatabase() {
-        // 입력값 가져오기
-        val title = etTitle.text.toString().trim()
-        val description = etDescription.text.toString().trim()
-        val category = spinnerCategory.selectedItem?.toString() ?: ""
-        val maxParticipants = etMaxParticipants.text.toString().toIntOrNull()
-        val dayOfWeek = selectedDayIndex
-        val timeRange = rangeSliderTime.values
-        val startTime = "${timeRange[0].toInt()}:00"
-        val endTime = "${timeRange[1].toInt()}:00"
-
-
-        // 유효성 검사
-        if (title.isEmpty() || dayOfWeek == null || maxParticipants == null) {
-            Toast.makeText(this, "필수 항목을 모두 입력해주세요.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (timeRange[0] >= timeRange[1]) {
-            Toast.makeText(this, "종료 시간은 시작 시간 이후여야 합니다.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // 데이터베이스에 저장
         val db = dbHelper.writableDatabase
         val groupId = UUID.randomUUID().toString()
+
+        val title = etTitle.text.toString()
+        val description = etDescription.text.toString()
+        val category = spinnerCategory.selectedItem.toString()
+        val maxParticipants = etMaxParticipants.text.toString()
+        val selectedDay = selectedDayIndex?.let { dayNames[it] } ?: "요일 없음"
+        val timeRange = "${rangeSliderTime.values[0].toInt()}:00 ~ ${rangeSliderTime.values[1].toInt()}:00"
 
         // Groups 테이블에 데이터 삽입
         val groupValues = ContentValues().apply {
@@ -144,14 +123,23 @@ class CreateGroup : AppCompatActivity() {
         val scheduleValues = ContentValues().apply {
             put("id", UUID.randomUUID().toString())
             put("groupId", groupId)
-            put("dayOfWeek", dayOfWeek + 1)
-            put("startTime", startTime)
-            put("endTime", endTime)
+            put("dayOfWeek", selectedDay)
+            put("startTime", timeRange.split("~")[0].trim()) // 시작 시간
+            put("endTime", timeRange.split("~")[1].trim())   // 종료 시간
         }
         db.insert("Schedules", null, scheduleValues)
-
-        Toast.makeText(this, "소모임이 저장되었습니다!", Toast.LENGTH_SHORT).show()
-        finish()
     }
 
+    // PostView로 데이터 전달 및 이동
+    private fun navigateToPostView() {
+        val intent = Intent(this, PostView::class.java).apply {
+            putExtra("GROUP_TITLE", etTitle.text.toString())
+            putExtra("GROUP_DESCRIPTION", etDescription.text.toString())
+            putExtra("GROUP_CATEGORY", spinnerCategory.selectedItem.toString())
+            putExtra("GROUP_MAX_PARTICIPANTS", etMaxParticipants.text.toString())
+            putExtra("GROUP_DAY", selectedDayIndex?.let { dayNames[it] } ?: "요일 없음") // 요일 전달
+            putExtra("GROUP_TIME_RANGE", "${rangeSliderTime.values[0].toInt()}:00 ~ ${rangeSliderTime.values[1].toInt()}:00") // 시간 전달
+        }
+        startActivity(intent)
+    }
 }

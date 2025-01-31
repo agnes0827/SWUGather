@@ -5,6 +5,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.content.Intent
 import android.widget.Button
+import android.widget.TextView
 import android.widget.GridLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ class PostView : AppCompatActivity() {
     private var imageUriList: MutableList<Uri?> = mutableListOf() // 저장된 이미지 URI
     private lateinit var imageViews: List<ImageView>
     private var currentIndex = 0 // 현재 업로드할 위치를 관리하는 인덱스
+    private lateinit var tvSchedule: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,27 @@ class PostView : AppCompatActivity() {
         uploadButton.setOnClickListener {
             openGallery()
         }
+
+        val title = intent.getStringExtra("GROUP_TITLE") ?: "제목 없음"
+        val description = intent.getStringExtra("GROUP_DESCRIPTION") ?: "설명 없음"
+        val category = intent.getStringExtra("GROUP_CATEGORY") ?: "카테고리 없음"
+        val maxParticipants = intent.getStringExtra("GROUP_MAX_PARTICIPANTS") ?: "0"
+        val day = intent.getStringExtra("GROUP_DAY") ?: "요일 없음"
+        val timeRange = intent.getStringExtra("GROUP_TIME_RANGE") ?: "시간 미정"
+
+        val tvTitle: TextView = findViewById(R.id.tvTitle)
+        val tvDescription: TextView = findViewById(R.id.tvDescription)
+        val tvCategory: TextView = findViewById(R.id.tvCategory)
+        val tvMaxParticipants: TextView = findViewById(R.id.tvMaxParticipants)
+        val tvSchedule : TextView = findViewById(R.id.tvSchedule)
+
+        tvTitle.text = title
+        tvDescription.text = description
+        tvCategory.text = category
+        tvMaxParticipants.text = "최대 인원: $maxParticipants"
+        tvSchedule.text = "모집 일정 : $day 요일 $timeRange 시" // 요일 + 시간 표시
     }
+
 
     // 갤러리 열기
     private fun openGallery() {
