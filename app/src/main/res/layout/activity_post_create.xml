@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".PostCreateActivity">
+
+    <EditText
+        android:id="@+id/editPostTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="게시물 제목"
+        android:inputType="text"
+        android:padding="12dp"/>
+
+    <EditText
+        android:id="@+id/editPostContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="게시물 내용"
+        android:inputType="textMultiLine"
+        android:padding="12dp"
+        android:minHeight="150dp"
+        android:gravity="top"/>
+
+    <Button
+        android:id="@+id/btnSubmitPost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="게시물 작성 완료"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

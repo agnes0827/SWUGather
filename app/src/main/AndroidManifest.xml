@@ -27,6 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".RecruitmentBoardActivity" />
+        <activity android:name=".PostDetailActivity" />
+        <activity android:name=".PostCreateActivity" />
+
     </application>
+
 
 </manifest>
