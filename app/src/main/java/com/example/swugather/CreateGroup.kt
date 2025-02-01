@@ -126,6 +126,10 @@ class CreateGroup : AppCompatActivity() {
             return
         }
 
+        // 현재 로그인한 유저 정보 가져오기
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val authorId = sharedPreferences.getString("user_id", "unknown") ?: "unknown"
+
         // 데이터베이스에 저장
         val db = dbHelper.writableDatabase
         val groupId = UUID.randomUUID().toString()
@@ -137,6 +141,7 @@ class CreateGroup : AppCompatActivity() {
             put("description", description)
             put("category", category)
             put("maxParticipants", maxParticipants)
+            put("author_id", authorId)
         }
         db.insert("Groups", null, groupValues)
 
