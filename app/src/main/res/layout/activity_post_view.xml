@@ -95,7 +95,7 @@
             android:layout_margin="8dp"
             android:background="#E0E0E0"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_image1" />
+            android:src="@drawable/ic_launcher_foreground" />
 
             <!-- 이미지 2 -->
         <ImageView
@@ -104,7 +104,7 @@
             android:layout_margin="8dp"
             android:background="#E0E0E0"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_image2" />
+            android:src="@drawable/ic_launcher_foreground" />
 
             <!-- 이미지 3 -->
         <ImageView
@@ -113,7 +113,7 @@
             android:layout_margin="8dp"
             android:background="#E0E0E0"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_image3" />
+            android:src="@drawable/ic_launcher_foreground" />
 
             <!-- 이미지 4 -->
         <ImageView
@@ -122,7 +122,7 @@
             android:layout_margin="8dp"
             android:background="#E0E0E0"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_image4" />
+            android:src="@drawable/ic_launcher_foreground" />
 
             <!-- 이미지 5 -->
         <ImageView
@@ -131,7 +131,7 @@
             android:layout_margin="8dp"
             android:background="#E0E0E0"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_image5" />
+            android:src="@drawable/ic_launcher_foreground" />
 
             <!-- 이미지 6 -->
         <ImageView
@@ -140,7 +140,7 @@
             android:layout_margin="8dp"
             android:background="#E0E0E0"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_image6" />
+            android:src="@drawable/ic_launcher_foreground" />
     </GridLayout>
 
 </ScrollView>
