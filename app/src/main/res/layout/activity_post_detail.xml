@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- ✅ ScrollView 내부를 감싸는 LinearLayout 추가 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,17 +24,52 @@
                 android:layout_height="50dp"
                 android:src="@drawable/baseline_account_circle_24" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="익명"
-                android:layout_marginStart="8dp"
-                android:textSize="18sp" />
+                android:orientation="vertical"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:id="@+id/tvCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="카테고리"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="제목"
+                    android:textSize="18sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvDescription"
             android:layout_width="match_parent"
-            android:layout_height="150dp" />
+            android:layout_height="wrap_content"
+            android:text="설명"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvMaxParticipants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모집 인원"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:id="@+id/tvSchedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="요일과 시간"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"/>
 
         <Button
             android:id="@+id/uploadButton"
