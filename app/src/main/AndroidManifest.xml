@@ -17,6 +17,7 @@
             android:exported="false" />
         <activity
             android:name=".PostView"
+            android:parentActivityName=".RecruitmentBoardActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -33,6 +34,5 @@
         <activity android:name=".PostCreateActivity" />
 
     </application>
-
 
 </manifest>
