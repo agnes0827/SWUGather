@@ -17,9 +17,7 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
                 title TEXT NOT NULL,
                 description TEXT,
                 category TEXT,
-                maxParticipants INTEGER,
-                author_id TEXT,
-                FOREIGN KEY(author_id) REFERENCES users(editTextId) ON DELETE CASCADE
+                maxParticipants INTEGER
             )
         """)
 

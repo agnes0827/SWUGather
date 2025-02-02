@@ -13,13 +13,6 @@
         android:theme="@style/Theme.SWUGather"
         tools:targetApi="31">
         <activity
-            android:name=".CreateGroup"
-            android:exported="false" />
-        <activity
-            android:name=".PostView"
-            android:parentActivityName=".RecruitmentBoardActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -34,5 +27,6 @@
         <activity android:name=".PostCreateActivity" />
 
     </application>
+
 
 </manifest>

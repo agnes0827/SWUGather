@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
                 if (connectCheck == true) {
                     Toast.makeText(this@MainActivity, "안녕하세요, " + id + "님", Toast.LENGTH_SHORT).show()
 
-                    //if문 넘어갈 시에 PostView로 이동
-                    val passintent = Intent(this@MainActivity, TodoActivity::class.java)
+                    //if문 넘어갈 시에 게시물 목록 페이지로 이동
+                    val passintent = Intent(this@MainActivity, RecruitmentBoardActivity::class.java)
                     startActivity(passintent)
                 }
 
