@@ -13,6 +13,7 @@ class RecruitmentListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecruitmentAdapter
     private val recruitmentList = mutableListOf<Recruitment>() // 모집글 목록
+    private lateinit var dbManager: DBManager // DBManager 인스턴스
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +26,9 @@ class RecruitmentListFragment : Fragment() {
         adapter = RecruitmentAdapter(recruitmentList)
         recyclerView.adapter = adapter
 
+        // DBManager 초기화
+        dbManager = DBManager(requireContext())
+
         // 카테고리별 데이터 로드
         val category = arguments?.getString("category") ?: "전체"
         loadRecruitmentData(category)
@@ -34,8 +38,19 @@ class RecruitmentListFragment : Fragment() {
 
     private fun loadRecruitmentData(category: String) {
         recruitmentList.clear()
-        recruitmentList.addAll(DummyData.getRecruitmentsByCategory(category)) // 더미 데이터 로드
-        adapter.notifyDataSetChanged()
+
+        // DB에서 모집글 데이터 가져오기
+        val allPosts = dbManager.getAllPosts()
+
+        // 선택한 카테고리에 따라 필터링
+        val filteredPosts = if (category == "전체") {
+            allPosts
+        } else {
+            allPosts.filter { it.category == category }
+        }
+
+        recruitmentList.addAll(filteredPosts)
+        adapter.notifyDataSetChanged() // RecyclerView 업데이트
     }
 
     companion object {

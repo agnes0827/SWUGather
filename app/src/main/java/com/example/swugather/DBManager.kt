@@ -69,4 +69,51 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
     companion object {
         const val DBNAME = "Login.db"
     }
+
+    // 게시물 작성
+    fun insertPost(title: String, description: String, category: String, maxParticipants: Int): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put("id", System.currentTimeMillis().toString()) // 고유 ID 생성
+            put("title", title)
+            put("description", description)
+            put("category", category)
+            put("maxParticipants", maxParticipants)
+        }
+        val result = db.insert("Groups", null, values)
+        db.close()
+        return result != -1L
+    }
+
+    // 게시물 삭제
+    fun deletePost(postId: Int): Boolean {
+        val db = this.writableDatabase
+        val result = db.delete("Posts", "id=?", arrayOf(postId.toString()))
+        db.close()
+
+        return result > 0
+    }
+
+    // 전체 게시물 불러오기
+    fun getAllPosts(): List<Recruitment> {
+        val db = this.readableDatabase
+        val postList = mutableListOf<Recruitment>()
+        val cursor = db.rawQuery("SELECT * FROM Groups", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getString(cursor.getColumnIndexOrThrow("id"))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow("description"))
+                val category = cursor.getString(cursor.getColumnIndexOrThrow("category"))
+                val maxParticipants = cursor.getInt(cursor.getColumnIndexOrThrow("maxParticipants"))
+
+                postList.add(Recruitment(id, title, description, category, maxParticipants))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return postList
+    }
 }

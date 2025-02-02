@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -36,5 +38,12 @@ class RecruitmentBoardActivity : AppCompatActivity() {
             val intent = Intent(this, PostCreateActivity::class.java)
             startActivity(intent)
         }
+
+        val dbManager = DBManager(this)
+        val recruitmentList = dbManager.getAllPosts() // 데이터베이스에서 게시물 목록 가져오기
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = RecruitmentAdapter(recruitmentList)
     }
 }

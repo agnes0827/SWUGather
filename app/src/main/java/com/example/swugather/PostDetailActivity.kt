@@ -9,10 +9,11 @@ import android.widget.GridLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class PostDetailActivity: AppCompatActivity() {
+class PostDetailActivity : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 1
     private var imageUriList: MutableList<Uri?> = mutableListOf() // 저장된 이미지 URI
     private lateinit var imageViews: List<ImageView>
@@ -21,6 +22,30 @@ class PostDetailActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
+
+        // 데이터 받아오는 코드
+        /*
+        val tvTitle = findViewById<TextView>(R.id.tvTitle)
+        val tvCategory = findViewById<TextView>(R.id.tvCategory)
+        val tvDescription = findViewById<TextView>(R.id.tvDescription)
+        val tvParticipants = findViewById<TextView>(R.id.tvMaxParticipants)
+        val tvSchedule = findViewById<TextView>(R.id.tvSchedule)
+
+        val postTitle = intent.getStringExtra("post_title") ?: "제목 없음"
+        val postCategory = intent.getStringExtra("post_category") ?: "카테고리 없음"
+        val postDescription = intent.getStringExtra("post_description") ?: "설명 없음"
+        val postParticipants = intent.getIntExtra("post_participants", 0)
+        val postDayOfWeek = intent.getStringExtra("post_dayOfWeek") ?: "요일 정보 없음"
+        val postStartTime = intent.getStringExtra("post_startTime") ?: "시작 시간 없음"
+        val postEndTime = intent.getStringExtra("post_endTime") ?: "종료 시간 없음"
+
+        // UI에 데이터 설정
+        tvTitle.text = postTitle
+        tvCategory.text = "카테고리: $postCategory"
+        tvDescription.text = postDescription
+        tvParticipants.text = "모집 인원: $postParticipants 명"
+        tvSchedule.text = "요일: $postDayOfWeek, 시간: $postStartTime ~ $postEndTime"
+        */
 
         val uploadButton: Button = findViewById(R.id.uploadButton)
         val gridLayout: GridLayout = findViewById(R.id.imageGrid)
