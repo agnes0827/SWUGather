@@ -41,9 +41,5 @@ class RecruitmentBoardActivity : AppCompatActivity() {
 
         val dbManager = DBManager(this)
         val recruitmentList = dbManager.getAllPosts() // 데이터베이스에서 게시물 목록 가져오기
-
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = RecruitmentAdapter(recruitmentList)
     }
 }

@@ -24,6 +24,8 @@
 
         <activity android:name=".RecruitmentBoardActivity" />
         <activity android:name=".PostDetailActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".TodoActivity" />
         <activity android:name=".PostCreateActivity" />
 
     </application>
