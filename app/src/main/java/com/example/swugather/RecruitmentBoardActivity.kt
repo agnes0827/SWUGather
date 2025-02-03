@@ -21,7 +21,7 @@ class RecruitmentBoardActivity : AppCompatActivity() {
         val viewPager = findViewById<ViewPager2>(R.id.viewPager)
 
         // 카테고리 목록 설정
-        val categories = listOf("전체", "운동", "독서", "맛집", "여행", "스터디", "기타")
+        val categories = listOf("전체", "운동", "독서", "여행", "스터디", "기타")
 
         // RecruitmentPagerAdapter 생성
         val adapter = RecruitmentPagerAdapter(supportFragmentManager, lifecycle, categories)

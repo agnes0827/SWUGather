@@ -46,4 +46,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation ("com.google.android.material:material:1.9.0")
+    implementation ("com.github.tlaabs:TimetableView:1.0.3")  {
+        exclude (group= "com.android.support")}
 }

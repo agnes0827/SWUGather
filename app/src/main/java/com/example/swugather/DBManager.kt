@@ -4,6 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.github.tlaabs.timetableview.Schedule
+import com.example.swugather.UserSchedule
 
 class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
@@ -31,6 +33,19 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
                 FOREIGN KEY(groupId) REFERENCES Groups(id)
             )
         """)
+
+        db.execSQL("""
+    CREATE TABLE UserSchedules (
+        id TEXT PRIMARY KEY,
+        userId TEXT NOT NULL,
+        groupId TEXT NOT NULL,
+        dayOfWeek INTEGER NOT NULL,
+        startTime TEXT NOT NULL,
+        endTime TEXT NOT NULL,
+        FOREIGN KEY(userId) REFERENCES users(editTextId),
+        FOREIGN KEY(groupId) REFERENCES Groups(id)
+    )
+""")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -115,5 +130,30 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
         cursor.close()
         db.close()
         return postList
+    }
+
+    //사용자가 참여한 모임의 일정만 가져오기
+    fun getUserSchedules(userId: String): List<UserSchedule> {
+        val db = this.readableDatabase
+        val schedules = mutableListOf<UserSchedule>()
+        val cursor = db.rawQuery(
+            "SELECT * FROM UserSchedules WHERE userId = ?",
+            arrayOf(userId)
+        )
+
+        while (cursor.moveToNext()) {
+            schedules.add(
+                UserSchedule(
+                    cursor.getString(cursor.getColumnIndexOrThrow("id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("groupId")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("dayOfWeek")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("startTime")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("endTime"))
+                )
+            )
+        }
+        cursor.close()
+        db.close()
+        return schedules
     }
 }

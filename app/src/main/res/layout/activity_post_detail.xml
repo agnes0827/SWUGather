@@ -72,6 +72,14 @@
             android:layout_marginTop="8dp"/>
 
         <Button
+            android:id="@+id/btnJoinGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="참여하기"
+            android:layout_marginTop="20dp"/>
+
+
+        <Button
             android:id="@+id/uploadButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

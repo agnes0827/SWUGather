@@ -13,6 +13,9 @@
         android:theme="@style/Theme.SWUGather"
         tools:targetApi="31">
         <activity
+            android:name=".MyPageActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -21,14 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".RecruitmentBoardActivity" />
         <activity android:name=".PostDetailActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".TodoActivity" />
         <activity android:name=".PostCreateActivity" />
-
     </application>
-
 
 </manifest>

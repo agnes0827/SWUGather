@@ -189,7 +189,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:hint="글 제목 입력" />
+                    android:hint="글 제목 입력"
+                    android:inputType="text"/>
 
                 <!-- 글 내용 -->
                 <TextView
@@ -206,7 +207,7 @@
                     android:layout_height="200dp"
                     android:gravity="top"
                     android:hint="글 내용을 입력하세요"
-                    android:inputType="textMultiLine" />
+                    android:inputType="text" />
 
                 <!-- 저장 버튼 -->
                 <Button
