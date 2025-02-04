@@ -39,14 +39,10 @@ class RecruitmentAdapter(private var recruitmentList: List<Recruitment>) :
                 putExtra("post_category", recruitment.category)
                 putExtra("post_description", recruitment.description)
                 putExtra("post_maxParticipants", recruitment.maxParticipants)
-                putExtra("post_dayOfWeek", recruitment.dayOfWeek)
-                putExtra("post_startTime", recruitment.startTime)
-                putExtra("post_endTime", recruitment.endTime)
             }
             context.startActivity(intent)
         }
     }
-
     override fun getItemCount(): Int = recruitmentList.size
 
     fun updateData(newList: List<Recruitment>) {
