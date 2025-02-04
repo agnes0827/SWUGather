@@ -109,14 +109,14 @@ class PostCreateActivity : AppCompatActivity() {
         val description = etDescription.text.toString().trim()
         val category = spinnerCategory.selectedItem?.toString() ?: ""
         val maxParticipants = etMaxParticipants.text.toString().toIntOrNull()
-        val dayOfWeek = selectedDayIndex
+        val dayOfWeek = (selectedDayIndex?.plus(1) ?: 1).coerceIn(1, 7)
         val timeRange = rangeSliderTime.values
         val startTime = "${timeRange[0].toInt()}:00"
         val endTime = "${timeRange[1].toInt()}:00"
 
 
         // 유효성 검사
-        if (title.isEmpty() || dayOfWeek == null || maxParticipants == null) {
+        if (title.isEmpty() || dayOfWeek == -1 || maxParticipants == null) {
             Toast.makeText(this, "필수 항목을 모두 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -149,7 +149,7 @@ class PostCreateActivity : AppCompatActivity() {
         val scheduleValues = ContentValues().apply {
             put("id", UUID.randomUUID().toString())
             put("groupId", groupId)
-            put("dayOfWeek", dayOfWeek + 1)
+            put("dayOfWeek", dayOfWeek)
             put("startTime", startTime)
             put("endTime", endTime)
         }

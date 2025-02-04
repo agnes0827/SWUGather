@@ -44,16 +44,20 @@ class PostDetailActivity : AppCompatActivity() {
         val postTitle = intent.getStringExtra("post_title") ?: "제목 없음"
         val postCategory = intent.getStringExtra("post_category") ?: "카테고리 없음"
         val postDescription = intent.getStringExtra("post_description") ?: "설명 없음"
-        val postParticipants = intent.getIntExtra("post_participants", 0)
-        val postDayOfWeek = intent.getIntExtra("post_dayOfWeek", 1) // 기본값 월요일(1)
+        val postParticipants = intent.getIntExtra("post_maxParticipants", 0)
+        val postDayOfWeek = intent.getIntExtra("post_dayOfWeek",  -1)
+
         val postStartTime = intent.getStringExtra("post_startTime") ?: "09:00"
         val postEndTime = intent.getStringExtra("post_endTime") ?: "18:00"
+
+        val postSchedule = "${convertDayToKorean(postDayOfWeek)}, 시간: $postStartTime ~ $postEndTime"
+
 
         tvTitle.text = postTitle
         tvCategory.text = "카테고리: $postCategory"
         tvDescription.text = postDescription
-        tvParticipants.text = "모집 인원: $postParticipants 명"
-        tvSchedule.text = "요일: ${convertDayToKorean(postDayOfWeek)}, 시간: $postStartTime ~ $postEndTime"
+        tvParticipants.text = "모집 인원: ${postParticipants}명"
+        tvSchedule.text = postSchedule
 
         btnJoinGroup.setOnClickListener {
             joinGroup(postId, postDayOfWeek, postStartTime, postEndTime)

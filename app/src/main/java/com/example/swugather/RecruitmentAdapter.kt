@@ -14,6 +14,7 @@ class RecruitmentAdapter(private var recruitmentList: List<Recruitment>) :
         val title: TextView = view.findViewById(R.id.titleTextView)
         val schedule: TextView = view.findViewById(R.id.scheduleTextView)
         val category: TextView = view.findViewById(R.id.categoryTextView)
+        val participants: TextView = view.findViewById(R.id.participantsTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecruitmentViewHolder {
@@ -27,6 +28,7 @@ class RecruitmentAdapter(private var recruitmentList: List<Recruitment>) :
         holder.title.text = recruitment.title
         holder.schedule.text = recruitment.schedule // "요일 시작시간~종료시간" 표시
         holder.category.text = "카테고리: ${recruitment.category}"
+        holder.participants.text = "모집 인원: ${recruitment.maxParticipants}명"
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
@@ -37,6 +39,9 @@ class RecruitmentAdapter(private var recruitmentList: List<Recruitment>) :
                 putExtra("post_category", recruitment.category)
                 putExtra("post_description", recruitment.description)
                 putExtra("post_maxParticipants", recruitment.maxParticipants)
+                putExtra("post_dayOfWeek", recruitment.dayOfWeek)
+                putExtra("post_startTime", recruitment.startTime)
+                putExtra("post_endTime", recruitment.endTime)
             }
             context.startActivity(intent)
         }

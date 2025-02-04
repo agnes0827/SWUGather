@@ -132,11 +132,11 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
                 val maxParticipants = cursor.getInt(cursor.getColumnIndexOrThrow("maxParticipants"))
 
                 // 일정 정보
-                val dayOfWeek = cursor.getInt(cursor.getColumnIndexOrThrow("dayOfWeek"))
+                val dayOfWeek = cursor.getInt(cursor.getColumnIndexOrThrow("dayOfWeek")).coerceIn(1, 7)
                 val startTime = cursor.getString(cursor.getColumnIndexOrThrow("startTime")) ?: "시간 없음"
                 val endTime = cursor.getString(cursor.getColumnIndexOrThrow("endTime")) ?: "시간 없음"
 
-                val scheduleText = if (dayOfWeek != 0) {
+                val scheduleText = if (dayOfWeek in 1..7) {
                     "${convertDayToKorean(dayOfWeek)} $startTime~$endTime"
                 } else {
                     "일정 없음"

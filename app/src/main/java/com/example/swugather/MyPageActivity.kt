@@ -47,12 +47,11 @@ class MyPageActivity : AppCompatActivity() {
         val timetableSchedules = ArrayList<Schedule>()
 
         userSchedules.forEach { scheduleData ->
-            val validDay = scheduleData.dayOfWeek.coerceIn(0, 6)
 
             val groupTitle: String = dbHelper.getGroupTitle(scheduleData.groupId)
 
             val schedule = Schedule().apply {
-                day = validDay
+                day = scheduleData.dayOfWeek - 1
                 startTime.hour = scheduleData.startTime.split(":").getOrNull(0)?.toIntOrNull() ?: 9
                 startTime.minute = 0
                 endTime.hour = scheduleData.endTime.split(":").getOrNull(0)?.toIntOrNull() ?: 18
