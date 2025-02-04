@@ -1,7 +1,10 @@
 package com.example.swugather
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -12,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var editTextId : EditText
     lateinit var editTextPassword : EditText
     lateinit var btnRegister : Button
+    private lateinit var sharedPreferences: SharedPreferences
 
     var DB:DBManager?=null
 
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         DB = DBManager(this)
+        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
         btnLogin = findViewById(R.id.btnLogin)
         editTextId = findViewById(R.id.editTextId)
@@ -42,9 +47,18 @@ class MainActivity : AppCompatActivity() {
                 if (connectCheck == true) {
                     Toast.makeText(this@MainActivity, "안녕하세요, " + id + "님", Toast.LENGTH_SHORT).show()
 
-                    //if문 넘어갈 시에 게시물 목록 페이지로 이동
+                    val editor = sharedPreferences.edit()
+                    editor.putString("user_id", id)
+                    editor.apply() // 저장 완료!
+
+                    // 로그 확인
+                    val savedUserId = sharedPreferences.getString("user_id", null)
+                    Log.d("MainActivity", "저장된 user_id: $savedUserId")
+
+                    //if문 넘어가면 게시물 목록 페이지로 이동
                     val passintent = Intent(this@MainActivity, RecruitmentBoardActivity::class.java)
                     startActivity(passintent)
+                    finish()
                 }
 
                 else{

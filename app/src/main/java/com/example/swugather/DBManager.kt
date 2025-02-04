@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.github.tlaabs.timetableview.Schedule
 import com.example.swugather.UserSchedule
 
-class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", null, 1) {
+class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", null, 2) {
     override fun onCreate(db: SQLiteDatabase) {
 
         //회원가입 정보 저장 테이블
@@ -113,7 +113,15 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
     fun getAllPosts(): List<Recruitment> {
         val db = this.readableDatabase
         val postList = mutableListOf<Recruitment>()
-        val cursor = db.rawQuery("SELECT * FROM Groups", null)
+
+        val cursor = db.rawQuery(
+            """
+        SELECT Groups.id, Groups.title, Groups.description, Groups.category, Groups.maxParticipants,
+               Schedules.dayOfWeek, Schedules.startTime, Schedules.endTime
+        FROM Groups
+        LEFT JOIN Schedules ON Groups.id = Schedules.groupId
+        """, null
+        )
 
         if (cursor.moveToFirst()) {
             do {
@@ -123,13 +131,38 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
                 val category = cursor.getString(cursor.getColumnIndexOrThrow("category"))
                 val maxParticipants = cursor.getInt(cursor.getColumnIndexOrThrow("maxParticipants"))
 
-                postList.add(Recruitment(id, title, description, category, maxParticipants))
+                // 일정 정보
+                val dayOfWeek = cursor.getInt(cursor.getColumnIndexOrThrow("dayOfWeek"))
+                val startTime = cursor.getString(cursor.getColumnIndexOrThrow("startTime")) ?: "시간 없음"
+                val endTime = cursor.getString(cursor.getColumnIndexOrThrow("endTime")) ?: "시간 없음"
+
+                val scheduleText = if (dayOfWeek != 0) {
+                    "${convertDayToKorean(dayOfWeek)} $startTime~$endTime"
+                } else {
+                    "일정 없음"
+                }
+
+                postList.add(Recruitment(id, title, scheduleText, category, description, maxParticipants))
             } while (cursor.moveToNext())
         }
 
         cursor.close()
         db.close()
         return postList
+    }
+
+    // 요일 숫자를 한국어로 변환
+    private fun convertDayToKorean(dayOfWeek: Int): String {
+        return when (dayOfWeek) {
+            1 -> "월요일"
+            2 -> "화요일"
+            3 -> "수요일"
+            4 -> "목요일"
+            5 -> "금요일"
+            6 -> "토요일"
+            7 -> "일요일"
+            else -> "요일 없음"
+        }
     }
 
     //사용자가 참여한 모임의 일정만 가져오기
@@ -155,5 +188,17 @@ class DBManager(context: Context) : SQLiteOpenHelper(context, "GroupApp.db", nul
         cursor.close()
         db.close()
         return schedules
+    }
+    fun getGroupTitle(groupId: String): String {
+        val db = this.readableDatabase
+        var title = "모임 제목 없음"  // 기본값
+
+        val cursor = db.rawQuery("SELECT title FROM Groups WHERE id = ?", arrayOf(groupId))
+        if (cursor.moveToFirst()) {
+            title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
+        }
+        cursor.close()
+        db.close()
+        return title
     }
 }

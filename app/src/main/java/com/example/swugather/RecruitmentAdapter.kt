@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-data class Recruitment(val id: String, val title: String, val description: String, val category: String, val maxParticipants: Int)
-
-class RecruitmentAdapter(private val recruitmentList: List<Recruitment>) :
+class RecruitmentAdapter(private var recruitmentList: List<Recruitment>) :
     RecyclerView.Adapter<RecruitmentAdapter.RecruitmentViewHolder>() {
 
     class RecruitmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.titleTextView)
+        val schedule: TextView = view.findViewById(R.id.scheduleTextView)
+        val category: TextView = view.findViewById(R.id.categoryTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecruitmentViewHolder {
@@ -25,17 +25,27 @@ class RecruitmentAdapter(private val recruitmentList: List<Recruitment>) :
     override fun onBindViewHolder(holder: RecruitmentViewHolder, position: Int) {
         val recruitment = recruitmentList[position]
         holder.title.text = recruitment.title
+        holder.schedule.text = recruitment.schedule // "요일 시작시간~종료시간" 표시
+        holder.category.text = "카테고리: ${recruitment.category}"
 
-        // 게시물 클릭 시 상세 페이지로 이동
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, PostDetailActivity::class.java).apply {
-                putExtra("post_id", recruitment.id)  // 게시물 ID 전달
+                putExtra("post_id", recruitment.id)
                 putExtra("post_title", recruitment.title)
+                putExtra("post_schedule", recruitment.schedule)
+                putExtra("post_category", recruitment.category)
+                putExtra("post_description", recruitment.description)
+                putExtra("post_maxParticipants", recruitment.maxParticipants)
             }
             context.startActivity(intent)
         }
     }
 
     override fun getItemCount(): Int = recruitmentList.size
+
+    fun updateData(newList: List<Recruitment>) {
+        recruitmentList = newList
+        notifyDataSetChanged()
+    }
 }

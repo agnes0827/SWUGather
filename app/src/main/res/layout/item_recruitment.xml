@@ -15,17 +15,17 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/dateTextView"
+        android:id="@+id/scheduleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="모집 날짜"
+        android:text="모집 일정"
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/participantsTextView"
+        android:id="@+id/categoryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="참여자 수"
+        android:text="카테고리"
         android:textSize="14sp" />
 
 </LinearLayout>

@@ -1,19 +1,18 @@
-package com.example.swugather
-
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.swugather.DBManager
+import com.example.swugather.R
+import com.example.swugather.RecruitmentAdapter
 
 class RecruitmentListFragment : Fragment() {
-
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: RecruitmentAdapter
-    private val recruitmentList = mutableListOf<Recruitment>() // 모집글 목록
-    private lateinit var dbManager: DBManager // DBManager 인스턴스
+    private lateinit var recruitmentAdapter: RecruitmentAdapter
+    private lateinit var dbManager: DBManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,34 +22,23 @@ class RecruitmentListFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = RecruitmentAdapter(recruitmentList)
-        recyclerView.adapter = adapter
 
-        // DBManager 초기화
         dbManager = DBManager(requireContext())
+        recruitmentAdapter = RecruitmentAdapter(emptyList())
+        recyclerView.adapter = recruitmentAdapter
 
-        // 카테고리별 데이터 로드
+        // newInstance()에서 전달된 값 가져오기
         val category = arguments?.getString("category") ?: "전체"
-        loadRecruitmentData(category)
+        loadRecruitments(category)
 
         return view
     }
 
-    private fun loadRecruitmentData(category: String) {
-        recruitmentList.clear()
-
-        // DB에서 모집글 데이터 가져오기
-        val allPosts = dbManager.getAllPosts()
-
-        // 선택한 카테고리에 따라 필터링
-        val filteredPosts = if (category == "전체") {
-            allPosts
-        } else {
-            allPosts.filter { it.category == category }
+    fun loadRecruitments(category: String) {
+        val recruitmentList = dbManager.getAllPosts().filter {
+            it.category == category || category == "전체"
         }
-
-        recruitmentList.addAll(filteredPosts)
-        adapter.notifyDataSetChanged() // RecyclerView 업데이트
+        recruitmentAdapter.updateData(recruitmentList)
     }
 
     companion object {

@@ -1,10 +1,12 @@
 package com.example.swugather
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.tlaabs.timetableview.Schedule
 import com.github.tlaabs.timetableview.TimetableView
@@ -23,35 +25,47 @@ class MyPageActivity : AppCompatActivity() {
         timetableView = findViewById(R.id.timetable)
 
         sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getString("user_id", null)
 
-        loadUserSchedules()
-    }
+        if (userId.isNullOrEmpty()) {
+            Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
 
-    private fun loadUserSchedules() {
-        val userId = sharedPreferences.getString("user_id", "unknown") ?: "unknown"
-
-        if (userId == "unknown") {
-            Log.e("MypageActivity", "로그인된 사용자 없음")
             return
         }
 
+        loadUserSchedules(userId)
+    }
+
+    private fun loadUserSchedules(userId: String) {
         val userSchedules = dbHelper.getUserSchedules(userId)
+
+        if (userSchedules.isEmpty()) {
+            Toast.makeText(this, "등록된 일정이 없습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val timetableSchedules = ArrayList<Schedule>()
 
         userSchedules.forEach { scheduleData ->
+            val validDay = scheduleData.dayOfWeek.coerceIn(0, 6)
+
+            val groupTitle: String = dbHelper.getGroupTitle(scheduleData.groupId)
+
             val schedule = Schedule().apply {
-                day = scheduleData.dayOfWeek - 1  // TimetableView는 0(월)~6(일)
+                day = validDay
                 startTime.hour = scheduleData.startTime.split(":").getOrNull(0)?.toIntOrNull() ?: 9
                 startTime.minute = 0
                 endTime.hour = scheduleData.endTime.split(":").getOrNull(0)?.toIntOrNull() ?: 18
                 endTime.minute = 0
-                classTitle = "참여 일정"
-                classPlace = "소모임"
+                classTitle = groupTitle
                 professorName = "그룹 ID: ${scheduleData.groupId}"
             }
+            timetableSchedules.add(schedule)
         }
 
-        timetableView.add(timetableSchedules)
+        // 일정이 있을 때만 추가
+        if (timetableSchedules.isNotEmpty()) {
+            timetableView.add(timetableSchedules)
+        }
     }
 }
